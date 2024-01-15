@@ -14,6 +14,7 @@ func (u *Usecase) ScheduleAppointment() {
 	var input string
 	var err error
 	var command int
+	var idx int
 
 	customers, err := u.ClinicRepo.GetCustomers()
 	if err != nil || len(customers) < 1 {
@@ -60,7 +61,15 @@ func (u *Usecase) ScheduleAppointment() {
 		}
 
 		if len(input) == 1 && err == nil && (command >= 3 || command < 9) {
-			break
+
+			idx = utils.Transform_index_back(command, curr_page, items_per_page)
+
+			if len(customers) >= idx+1 {
+				break
+			}
+			fmt.Println("Out of index")
+			continue
+
 		}
 
 		fmt.Println("Value Invalid")
@@ -72,7 +81,6 @@ func (u *Usecase) ScheduleAppointment() {
 		u.DefaultRoutes(command)
 	}
 
-	idx := utils.Transform_index_back(command, curr_page, items_per_page)
 	u.MakeAppointment(customers[idx].Id)
 	os.Exit(0)
 

@@ -14,6 +14,7 @@ func (u *Usecase) CancelAppointment() {
 	var input string
 	var err error
 	var command int
+	var idx int
 
 	appointments, err := u.ClinicRepo.GetAppointments()
 	if err != nil || len(appointments) < 1 {
@@ -34,7 +35,7 @@ func (u *Usecase) CancelAppointment() {
 		}
 
 		start_index, last_index := utils.Transform(curr_page, items_per_page, total_pages, last_page_len)
-		fmt.Println(start_index, last_index)
+		// fmt.Println(start_index, last_index)
 		for i := start_index; i < last_index; i++ {
 			idx := utils.Convert_to_index(curr_page, items_per_page, i)
 			fmt.Println("Press", idx, "to Cancel Appointment for", appointments[i].UserName, "At", appointments[i].Time)
@@ -60,7 +61,14 @@ func (u *Usecase) CancelAppointment() {
 		}
 
 		if len(input) == 1 && err == nil && (command >= 3 || command < 9) {
-			break
+			idx = utils.Transform_index_back(command, curr_page, items_per_page)
+
+			if len(appointments) >= idx+1 {
+				break
+			}
+			fmt.Println("Out of index")
+			continue
+
 		}
 
 		fmt.Println("Value Invalid")
@@ -71,8 +79,6 @@ func (u *Usecase) CancelAppointment() {
 	if command <= 1 && err == nil {
 		u.DefaultRoutes(command)
 	}
-
-	idx := utils.Transform_index_back(command, curr_page, items_per_page)
 
 	u.ClinicRepo.CancelAppointment(appointments[idx].Id)
 	u.Home()
