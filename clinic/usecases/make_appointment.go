@@ -48,11 +48,14 @@ func (u *Usecase) MakeAppointment(user_id uuid.UUID) {
 				date = append(date, v)
 			}
 
-			fmt.Println(m)
+			// fmt.Println(m)
 			if date[0] >= d && date[1] >= m && date[2] >= y {
 				input_data = input
-				fmt.Println("Valid input")
+				// fmt.Println("Valid input")
 				break
+			}else {
+				fmt.Println("Invalid input")
+
 			}
 		} else {
 			fmt.Println("Invalid input")
@@ -82,7 +85,7 @@ func (u *Usecase) MakeAppointment(user_id uuid.UUID) {
 		matched = time_reg.MatchString(input)
 
 		if matched {
-			fmt.Println("Valid input")
+			// fmt.Println("Valid input")
 			input_time = input
 			break
 		} else {

@@ -12,7 +12,7 @@ var usersTable = `
 CREATE TABLE IF NOT EXISTS users (
 	id TEXT PRIMARY KEY,
 	name VARCHAR(256),
-	phone int
+	phone int UNIQUE
 )
 
 `
@@ -21,12 +21,17 @@ var appointmentsTable = `
 
 CREATE TABLE IF NOT EXISTS appointments (
 	id TEXT PRIMARY KEY,
-	time TIMESTAMP,
+	time TIMESTAMP UNIQUE,
 	user_id TEXT,
 	FOREIGN KEY (user_id) REFERENCES users(id)
 )
 
 `
+
+// var constraints = `
+// 	CREATE UNIQUE INDEX `unique_phone` ON `users` ( `phone`);
+// 	CREATE UNIQUE INDEX `appointments_date_unique` ON `appointments` (`time`);
+// `
 
 func InstanciateDB() (*sqlx.DB, error) {
 	db, err := sqlx.Connect("sqlite3", "./persistent.db")

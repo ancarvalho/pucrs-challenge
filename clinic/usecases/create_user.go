@@ -26,7 +26,7 @@ func (u *Usecase) CreateUser() {
 	for {
 		fmt.Scanln(&input)
 
-		fmt.Println("Length", len(input))
+		// fmt.Println("Length", len(input))
 
 		if command, command_err = strconv.Atoi(input); len(input) == 1 && err == nil && (command == 0 || command == 1) {
 			break
@@ -34,7 +34,7 @@ func (u *Usecase) CreateUser() {
 		matched = reg.MatchString(input)
 
 		if matched {
-			fmt.Println("Valid input")
+			// fmt.Println("Valid input")
 			name = input
 			break
 		} else {
@@ -58,10 +58,12 @@ func (u *Usecase) CreateUser() {
 		phone, err = strconv.Atoi(input)
 
 		if err == nil && len(input) >= 8 {
-			fmt.Println("Valid Phone Number")
+			// fmt.Println("Valid Input")
 			break
-		}
+		}else {
 
+			fmt.Println("Invalid input (min 8 nums)")
+		}
 		continue
 	}
 

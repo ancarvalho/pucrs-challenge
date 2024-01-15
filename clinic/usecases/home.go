@@ -34,7 +34,7 @@ func (u *Usecase) Home() {
 		fmt.Scanln(&input)
 		val, err = strconv.Atoi(input)
 		if err == nil && val >= 0 && val <= 3 {
-			fmt.Println("Valid integer input")
+			// fmt.Println("Valid integer input")
 			break
 		} else {
 			fmt.Println("Invalid integer input")
