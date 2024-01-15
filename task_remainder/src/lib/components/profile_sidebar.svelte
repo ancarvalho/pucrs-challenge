@@ -1,8 +1,10 @@
 <script lang="ts">
   const params = {
     name: "Andrey Carvalho",
-    description: "Lorem ipsum dolorLorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor Lorem ipsum dolor ",
-    picture: "https://raw.githubusercontent.com/ancarvalho/curriculum-vitae/master/static/profile.jpg",
+    description:
+      "Sou um Programador Autodidata, com objetivo de entregar excelente software, com orgulho de produzir soluções cujas quais resolvam problemas, com contribuições na comunidade. Foco em entregar soluções completas - incluindo Golang, Typescript,  e Docker. ",
+    picture:
+      "https://raw.githubusercontent.com/ancarvalho/curriculum-vitae/master/static/profile.jpg",
     links: {
       github: "https://github.com",
       LinkedIn: "https://linkedin.com",
@@ -10,13 +12,11 @@
       twitter: "https://twitter.com",
     },
   };
-
 </script>
 
 <div class="flex flex-col justify-center items-center gap-4">
-  
   <img class="rounded-full h-32" src={params.picture} alt="" />
-  <div >
+  <div>
     <p class="text-xl text-center pb-4">
       {params.name}
     </p>
@@ -34,5 +34,3 @@
     {/each}
   </ul>
 </div>
-
-

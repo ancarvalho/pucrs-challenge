@@ -4,6 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   viewBox="0 0 45.402 45.402"
   xml:space="preserve"
+  class="h-4 fill-green-700"
 >
   <g>
     <path
