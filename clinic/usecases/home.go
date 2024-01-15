@@ -2,10 +2,25 @@ package usecases
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 )
 
-func Home() {
+func (u *Usecase) DefaultRoutes(command int) {
+	switch command {
+	case 0:
+		// panic("Exiting...")
+		fmt.Println("Exiting...")
+		os.Exit(0)
+	case 1:
+		u.Home()
+		// panic("Exiting")
+		fmt.Println("Exiting...")
+		os.Exit(0)
+	}
+}
+
+func (u *Usecase) Home() {
 	var input string
 	var err error
 	var val int
@@ -32,11 +47,11 @@ func Home() {
 		fmt.Println("Saindo...")
 
 	case 1:
-		CreateUser()
+		u.CreateUser()
 	case 2:
-		ScheduleAppointment()
+		u.ScheduleAppointment()
 	case 3:
-		CancelAppointment()
+		u.CancelAppointment()
 
 	}
 }

@@ -3,10 +3,11 @@ package usecases
 import (
 	"clinic/utils"
 	"fmt"
+	"os"
 	"strconv"
 )
 
-func ScheduleAppointment() {
+func (u *Usecase) ScheduleAppointment() {
 
 	items_per_page := 6
 
@@ -14,9 +15,15 @@ func ScheduleAppointment() {
 	var err error
 	var command int
 
-	names := utils.GetNames()
-	total_lenght := len(names)
-	total_pages, last_page_len := determine_pages(items_per_page, total_lenght)
+	customers, err := u.ClinicRepo.GetCustomers()
+	if err != nil || len(customers) < 1 {
+		fmt.Println("Error Getting Users")
+		u.Home()
+		os.Exit(0)
+	}
+
+	total_lenght := len(customers)
+	total_pages, last_page_len := utils.Determine_pages(items_per_page, total_lenght)
 	var curr_page int = 0
 
 	for {
@@ -26,11 +33,11 @@ func ScheduleAppointment() {
 			fmt.Println("Press 2 Previous Page")
 		}
 
-		start_index, last_index := transform(curr_page, items_per_page, total_pages, last_page_len)
-		fmt.Println(start_index, last_index)
+		start_index, last_index := utils.Transform(curr_page, items_per_page, total_pages, last_page_len)
+		// fmt.Println(start_index, last_index)
 		for i := start_index; i < last_index; i++ {
-			idx := convert_to_index(curr_page, items_per_page, i)
-			fmt.Println("Press", idx, "to Schedule an Appointment for", names[i])
+			idx := utils.Convert_to_index(curr_page, items_per_page, i)
+			fmt.Println("Press", idx, "to Schedule an Appointment for", customers[i].Name)
 		}
 
 		// fmt.Println(total_pages)
@@ -47,9 +54,13 @@ func ScheduleAppointment() {
 			break
 		}
 
-		if len(input) == 1 && err == nil && (command >= 2 || command <= 9) {
-			interpret_command(command, &curr_page, total_pages, items_per_page)
+		if len(input) == 1 && err == nil && (command == 2 || command == 9) {
+			utils.Interpret_command(command, &curr_page, total_pages, items_per_page)
 			continue
+		}
+
+		if len(input) == 1 && err == nil && (command >= 3 || command < 9) {
+			break
 		}
 
 		fmt.Println("Value Invalid")
@@ -57,66 +68,12 @@ func ScheduleAppointment() {
 
 	}
 
-	IntermediaryCommand(command)
-
-}
-
-func interpret_command(command int, curr_page *int, total_pages int, items_per_page int) {
-
-	if command == 2 && *curr_page > 0 {
-		*curr_page -= 1
-
-	}
-	if command == 9 && *curr_page < total_pages {
-		*curr_page += 1
-
+	if command <= 1 && err == nil {
+		u.DefaultRoutes(command)
 	}
 
-	idx := transform_index_back(command, *curr_page, items_per_page)
-	fmt.Println(idx)
+	idx := utils.Transform_index_back(command, curr_page, items_per_page)
+	u.MakeAppointment(customers[idx].Id)
+	os.Exit(0)
 
-	// names := utils.GetNames()
-
-	// fmt.Println("Curr Index", idx, names[idx])
-
-}
-
-func transform_index_back(command int, curr_page int, items_per_page int) int {
-	return command + (curr_page * items_per_page) - 3
-}
-
-func convert_to_index(curr_page int, items_per_row int, index int) int {
-	return index - (curr_page * items_per_row) + 3
-}
-
-func determine_pages(items_per_row int, total_len int) (int, int) {
-	var last_page_len int
-
-	total_pages := total_len / items_per_row
-
-	if remainig := total_len % items_per_row; remainig != 0 {
-		total_pages += 1
-		last_page_len = remainig
-	}
-	if last_page_len <= 0 {
-		last_page_len = items_per_row
-	}
-
-	return total_pages, last_page_len
-
-}
-
-func transform(curr_page int, items_per_row int, total_pages int, last_page_len int) (int, int) {
-	start_index := curr_page * items_per_row
-
-	last_index := start_index
-
-	if curr_page == (total_pages - 1) {
-		last_index += last_page_len
-
-	} else {
-		last_index += items_per_row
-	}
-
-	return start_index, last_index
 }

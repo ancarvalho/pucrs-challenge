@@ -1,7 +1,23 @@
 package main
 
-import "clinic/usecases"
+import (
+	"clinic/db"
+	"clinic/repository"
+	"clinic/usecases"
+	"fmt"
+	"os"
+)
 
 func main() {
-	usecases.Home()
+
+	db, err := db.InstanciateDB()
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(0)
+	}
+
+	repo := repository.InstanciateClinicRepo(db)
+	usecases.InstanciateUsecase(repo).Home()
+
+	// usecases.Home()
 }

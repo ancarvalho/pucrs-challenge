@@ -1,30 +1,16 @@
 package usecases
 
 import (
+	"clinic/types"
 	"fmt"
 	"os"
 	"regexp"
 	"strconv"
 )
 
-func IntermediaryCommand(command int) {
-
-	switch command {
-	case 0:
-		// panic("Exiting...")
-		fmt.Println("Exiting...")
-		os.Exit(0)
-	case 1:
-		Home()
-		// panic("Exiting")
-		fmt.Println("Exiting...")
-		os.Exit(0)
-	}
-}
-
-func CreateUser() {
+func (u *Usecase) CreateUser() {
 	var input, name string
-	var err error
+	var err, command_err error
 	var matched bool
 	// var name string
 	var phone int
@@ -42,7 +28,7 @@ func CreateUser() {
 
 		fmt.Println("Length", len(input))
 
-		if command, err = strconv.Atoi(input); len(input) == 1 && err == nil && (command == 0 || command == 1) {
+		if command, command_err = strconv.Atoi(input); len(input) == 1 && err == nil && (command == 0 || command == 1) {
 			break
 		}
 		matched = reg.MatchString(input)
@@ -57,15 +43,15 @@ func CreateUser() {
 		}
 	}
 	// fmt.Println(command)
-	if command <= 1 {
-		IntermediaryCommand(command)
+	if command <= 1 && command_err == nil {
+		u.DefaultRoutes(command)
 	}
 
 	fmt.Println("Type Customer Phone:")
 	for {
 		fmt.Scanln(&input)
 
-		if command, err := strconv.Atoi(input); len(input) == 1 && err == nil && (command == 0 || command == 1) {
+		if command, command_err = strconv.Atoi(input); len(input) == 1 && err == nil && (command == 0 || command == 1) {
 			break
 		}
 
@@ -79,10 +65,26 @@ func CreateUser() {
 		continue
 	}
 
-	if command <= 1 {
-		IntermediaryCommand(command)
+	if command <= 1 && command_err == nil {
+		// fmt.Println("here", command)
+		u.DefaultRoutes(command)
 	}
 
-	fmt.Println("Name:", name, "Phone:", phone)
+	user, err := types.ValidateUser(name, phone)
+	if err != nil {
+		fmt.Println(err)
+		u.CreateUser()
+		os.Exit(0)
+	}
+
+	err = u.ClinicRepo.CreateUser(user)
+	if err != nil {
+		fmt.Println(err)
+		u.CreateUser()
+		os.Exit(0)
+	}
+
+	u.Home()
+	os.Exit(0)
 
 }
